@@ -4,6 +4,15 @@ cmake_minimum_required(VERSION 3.18.1)
 # Project name (optional, but good practice)
 project(WhisperAndroidLib C CXX)
 
+# --- 16 KB page alignment (Android 15+) ---
+# Android 15 mostra warning, Android 16 sarà bloccante. Le librerie native
+# devono essere allineate a 16 KB invece dei classici 4 KB. Applicato a TUTTI
+# i target sotto (whisper, ggml, whisper-jni) tramite add_link_options globale.
+# Riferimento: https://developer.android.com/16kb-page-size
+if(ANDROID)
+    add_link_options("-Wl,-z,max-page-size=16384")
+endif()
+
 # --- Add the whisper_core library ---
 # This tells CMake to look into the 'whisper_core' directory
 # and process its CMakeLists.txt.
